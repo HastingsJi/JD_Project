@@ -7,8 +7,8 @@ var client = jayson.client.http({
 });
 
 // Test Rpc method
-function getOneNews(source, page_num, callback) {
-    client.request('getOneNews', [source, page_num], function(err, response) {
+function getNewsSummariesForUser(source, page_num, callback) {
+    client.request('getNewsSummariesForUser', [source, page_num], function(err, response) {
       if(err) throw err;
       console.log(response);
       callback(response.result);
@@ -16,5 +16,5 @@ function getOneNews(source, page_num, callback) {
   };
 
 module.exports = {
-    getOneNews : getOneNews,
+    getNewsSummariesForUser : getNewsSummariesForUser,
 };
