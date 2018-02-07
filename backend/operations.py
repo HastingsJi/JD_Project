@@ -37,6 +37,13 @@ from cloudAMQP_client import CloudAMQPClient
 #     news = db[NEWS_TABLE_NAME].find_one()
 #     return json.loads(dumps(news))
 
+def getNumofNews(source):
+    db = mongodb_client.get_db()
+    num_news = db[NEWS_TABLE_NAME].count({'source': source })
+    return num_news
+
+
+
 def getNewsSummariesForUser(source, page_num):
     page_num = int(page_num)
     begin_index = (page_num - 1) * NEWS_LIST_BATCH_SIZE

@@ -15,6 +15,16 @@ function getNewsSummariesForUser(source, page_num, callback) {
     });
   };
 
+function getNumofNews(source, callback) {
+    client.request('getNumofNews', [source], function(err, response) {
+      if(err) throw err;
+      console.log(response);
+      console.log(response.result);
+      callback(response.result);
+    });
+  };
+
 module.exports = {
     getNewsSummariesForUser : getNewsSummariesForUser,
+    getNumofNews: getNumofNews
 };
