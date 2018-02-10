@@ -1,3 +1,4 @@
 pymongo
 jsonrpclib-pelix
 pika
+redis

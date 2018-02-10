@@ -20,11 +20,11 @@ class App extends React.Component {
 
      
                 <div className='container'>
-                   
+                    <SearchBar />
                     <NewsPanel  />  
                     {/* {this.props.searchTerm}; */}
                     
-                    <SearchBar />
+                   
                     {/* <h3>{this.props.searchTerm}</h3> */}
                     
                 </div>

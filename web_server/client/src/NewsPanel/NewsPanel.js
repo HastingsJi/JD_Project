@@ -3,6 +3,8 @@ import './NewsPanel.css';
 import NewsCard from '../NewsCard/NewsCard';
 // import _ from 'lodash';
 import { connect } from 'react-redux';
+import ReactPaginate from 'react-paginate';
+
 
 class NewsPanel extends React.Component {
     constructor(props){
@@ -24,12 +26,10 @@ class NewsPanel extends React.Component {
 
 
     componentDidMount() {
-        // this.setState({source: this.props.searchTerm})
-        // console.log(this.props.searchTerm)
+
         console.log('zzz')
         this.loadNumNews();
-        // this.loadMoreNews = _.debounce(this.loadMoreNews, 1000);
-        // window.addEventListener('scroll', () => this.handleScroll());
+
     }
 
     loadNumNews(){
@@ -41,9 +41,7 @@ class NewsPanel extends React.Component {
         encodeURI(news_url),
         {
             method:'GET',
-            // headers: {
-            //   'Authorization': 'bearer ' + Auth.getToken(),
-            // }
+     
         });
 
         fetch(request)
@@ -54,8 +52,7 @@ class NewsPanel extends React.Component {
             // }
 
             this.setState({
-            // news: this.state.news ? this.state.news.concat(news) : news,
-            // pageNum: this.state.pageNum + 1,
+       
             num: num
             });
             console.log(num)
@@ -88,8 +85,8 @@ class NewsPanel extends React.Component {
             }
     
             this.setState({
-              news: this.state.news ? this.state.news.concat(news) : news,
-              pageNum: this.state.pageNum + 1,
+              news: news,
+            //   pageNum: this.state.pageNum + 1,
             });
           });
 
@@ -114,6 +111,26 @@ class NewsPanel extends React.Component {
         );
     }
 
+    handlePageClick = (data) =>{
+        console.log('handlepageclick')
+        let dataNum = data.selected + 1
+        console.log(dataNum)
+        // console.log(page.selected)
+        console.log('before ' + this.state.pageNum)
+        this.setState({pageNum: dataNum}, function(){
+            console.log('after ' + this.state.pageNum)
+            this.loadMoreNews();
+        })
+        
+    }
+    // handlePageClick = (data) => {
+    //     let selected = data.selected;
+    //     let offset = Math.ceil(selected * this.props.perPage);
+    
+    //     this.setState({offset: offset}, () => {
+    //       this.loadCommentsFromServer();
+    //     });
+    //   };
     
 
     render() {
@@ -122,13 +139,28 @@ class NewsPanel extends React.Component {
                 <div>
                    
                     {this.renderNews()}
+
+                    <div className="commentBox">
+        <ReactPaginate previousLabel={"previous"}
+                       nextLabel={"next"}
+                       breakLabel={<a href="">...</a>}
+                       breakClassName={"break-me"}
+                       pageCount={10}
+                       marginPagesDisplayed={2}
+                       pageRangeDisplayed={5}
+                       onPageChange={this.handlePageClick}
+                       containerClassName={"pagination"}
+                       subContainerClassName={"pages pagination"}
+                       activeClassName={"active"} />
+                    </div>
+
                 </div>
             );
         } else{
             return(
                 <div>
                     {/* {props.searchTerm} */}
-                    Loading...
+                    {/* Loading... */}
                 </div>
             );
         }
