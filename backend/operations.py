@@ -4,7 +4,9 @@ import json
 
 import pickle
 import redis
+import re
 
+import dateutil.parser
 
 from bson.json_util import dumps
 # import utils packages
@@ -36,6 +38,27 @@ from cloudAMQP_client import CloudAMQPClient
 #     db = mongodb_client.get_db()
 #     news = db[NEWS_TABLE_NAME].find_one()
 #     return json.loads(dumps(news))
+
+def getInterestingNewsInRange(keyword, startdate, enddate):
+    db = mongodb_client.get_db()
+
+    startdate = dateutil.parser.parse(startdate)
+    enddate = dateutil.parser.parse(enddate)
+    # print (type(startdate))
+
+
+    interesting_news = db[NEWS_TABLE_NAME].find({
+        'publishedAt':{'$gte' : startdate, '$lte':enddate  },
+        '$or' : [ { "title" : {'$in': [re.compile(keyword, re.IGNORECASE)]} }, { "description" : {'$in': [re.compile(keyword, re.IGNORECASE)]} } ]
+    })
+    # print ('\n')
+    # print(list(interesting_news), file=open('out.txt', 'a'))
+    # print (len(list(interesting_news)))
+    # print ('\n')
+    # interesting_news = 'xx'
+    return json.loads(dumps(list(interesting_news)))
+
+
 
 def getNumofNews(source):
     db = mongodb_client.get_db()

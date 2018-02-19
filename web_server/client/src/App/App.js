@@ -5,6 +5,8 @@ import React from 'react';
 import './App.css';
 import NewsPanel from '../NewsPanel/NewsPanel';
 import SearchBar from '../SearchBar/SearchBar';
+import DatePicker from '../DatePicker/DatePicker';
+import NewsAnalysis from '../NewsAnalysis/NewsAnalysis'
 import { connect } from 'react-redux';
 
 class App extends React.Component {
@@ -21,23 +23,27 @@ class App extends React.Component {
      
                 <div className='container'>
                     <SearchBar />
-                    <NewsPanel  />  
-                    {/* {this.props.searchTerm}; */}
-                    
-                   
-                    {/* <h3>{this.props.searchTerm}</h3> */}
+                    <NewsPanel  />   
+                    {/* <DatePicker /> */}
+                    {/* <NewsAnalysis /> */}
+                    {/* <p>{this.props.startTerm}</p> */}
+                    {/* {this.props.endtTerm} */}
                     
                 </div>
         );
     }
 }
 
-export default App;
+// export default App;
 
-// export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps)(App);
 
-// function mapStateToProps(state){
-//     return{
-//         searchTerm: state.searchTerm
-//     }
-// }
+function mapStateToProps(state){
+    return{
+        searchTerm: state.searchTerm,
+        startTerm: state.startTerm,
+        endtTerm: state.endtTerm,
+
+
+    }
+}

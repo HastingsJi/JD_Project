@@ -23,4 +23,16 @@ router.get('/source/:source', function(req, res, next) {
 	});
 });
 
+
+router.get('/keyword/:keyword/startdate/:startdate/enddate/:enddate', function(req, res, next) {
+	console.log('Fetching news...');
+	keyword = req.params['keyword'];
+	startdate = req.params['startdate'];
+	enddate = req.params['enddate'];
+	
+	rpc_client.getInterestingNewsInRange(keyword, startdate, enddate, function(response) {
+	  res.json(response);
+	});
+});
+
 module.exports = router;

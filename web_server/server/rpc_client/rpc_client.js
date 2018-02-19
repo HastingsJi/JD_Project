@@ -24,7 +24,17 @@ function getNumofNews(source, callback) {
     });
   };
 
+function getInterestingNewsInRange(keyword, startdate, enddate, callback){
+    client.request('getInterestingNewsInRange', [keyword, startdate, enddate], function(err, response) {
+      if(err) throw err;
+      console.log(response);
+      callback(response.result);
+    });
+
+}
+
 module.exports = {
     getNewsSummariesForUser : getNewsSummariesForUser,
-    getNumofNews: getNumofNews
+    getNumofNews: getNumofNews,
+    getInterestingNewsInRange: getInterestingNewsInRange
 };

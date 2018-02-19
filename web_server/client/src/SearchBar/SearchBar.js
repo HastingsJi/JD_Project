@@ -9,16 +9,22 @@ class SearchBar extends Component {
     constructor(props) {
         super(props);
         this.state = { term: '' };
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
+
+    handleSubmit(event) {
+        // alert('Your favorite flavor is: ' + this.state.value);
+        event.preventDefault();
+        this.props.trackSearchTerm(this.state.term);
+        console.log(this.state.term)
+      }
 
     render() {
         return (
 
             <nav>
             <div class="nav-wrapper">
-              <form onSubmit={(e) => {
-                  e.preventDefault();
-              }}>
+              <form onSubmit={this.handleSubmit}>
                 <div class="input-field">
                 
                   <input id="search" type="search" required 
@@ -26,7 +32,7 @@ class SearchBar extends Component {
                     onChange={
                         (event) => {
                             this.setState({term:event.target.value});
-                            this.props.trackSearchTerm(event.target.value);
+                            // this.props.trackSearchTerm(event.target.value);
                         }
                     }
                   />

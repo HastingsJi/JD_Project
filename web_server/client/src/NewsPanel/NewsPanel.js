@@ -159,7 +159,7 @@ class NewsPanel extends React.Component {
         } else{
             return(
                 <div>
-                    {/* {props.searchTerm} */}
+                    <p>{this.props.searchTerm} </p>
                     {/* Loading... */}
                 </div>
             );
