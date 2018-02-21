@@ -28,6 +28,8 @@ def get_interesting_news_in_range(keyword, startdate, enddate):
     # print (keyword, startdate, enddate)
     # print (type(startdate))
     return (operations.getInterestingNewsInRange(keyword, startdate, enddate))
+    # return (operations.getInterestingNewsInRange('trump', '2017-02-01T20:00:00.000Z', '2017-02-10T20:00:00.000Z'))
+    
 
 RPC_SERVER = SimpleJSONRPCServer((SERVER_HOST, SERVER_PORT))
 RPC_SERVER.register_function(get_news_summaries_for_user, 'getNewsSummariesForUser')
@@ -38,5 +40,6 @@ RPC_SERVER.register_function(add, 'Add')
 
 
 print("Starting RPC server on %s:%d" % (SERVER_HOST, SERVER_PORT))
-
+# get_interesting_news_in_range('trump', '2017-02-01T20:00:00.000Z', '2017-02-10T20:00:00.000Z')
 RPC_SERVER.serve_forever()
+

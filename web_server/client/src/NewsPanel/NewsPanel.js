@@ -5,21 +5,34 @@ import NewsCard from '../NewsCard/NewsCard';
 import { connect } from 'react-redux';
 import ReactPaginate from 'react-paginate';
 
+import {bindActionCreators } from 'redux';
+import {trackPosNews} from "../actions/track_pos_news";
+import {trackNeuNews} from "../actions/track_neu_news";
+import {trackNegNews} from "../actions/track_neg_news";
+
+
+
+const NEWS_LIST_BATCH_SIZE = 5
+const UP_THRESHOLD = 0.2
+const DOWN_THRESHOLD = -0.2
 
 class NewsPanel extends React.Component {
     constructor(props){
         super(props);                        // no props because on props taken as params 
-        this.state = { news:null, pageNum:1, loadedAll:false, source:'', num: 0};        // news exsit as Newspanel's child and saved as json list
+        this.state = { news:null, pageNum:1, loadedAll:false, source:'', num: 0, startdate:'', enddate: '', slicedNews: null};        // news exsit as Newspanel's child and saved as json list
     }
 
     componentWillReceiveProps(nextProps){
-        console.log(nextProps.searchTerm);
+        console.log('NP: '+nextProps.searchTerm);
+        console.log('NP: '+nextProps.startTerm);
+        console.log('NP: '+nextProps.endTerm);
         // console.log(this.state.source);
-        this.setState({source: nextProps.searchTerm}, function(){
-            console.log(this.state.source);
-            this.loadMoreNews();
-            this.loadNumNews();
-        });
+        if (nextProps.searchTerm && nextProps.startTerm && nextProps.endTerm != null){
+            this.setState({source: nextProps.searchTerm, startdate:nextProps.startTerm,enddate:nextProps.endTerm}, function(){
+                this.loadAllNews();
+            });
+        }
+
         
     }
 
@@ -27,7 +40,7 @@ class NewsPanel extends React.Component {
 
     componentDidMount() {
 
-        console.log('zzz')
+        // console.log('zzz')
         this.loadNumNews();
 
     }
@@ -64,17 +77,16 @@ class NewsPanel extends React.Component {
         // if (this.state.loadedAll == true) {
         //   return;
         // }
+
+        // /keyword/:keyword/startdate/:startdate/enddate/:enddate
     
         const news_url = 'http://' + window.location.hostname + ':3000' +
-            '/news/source/' + this.state.source + '/pageNum/' + this.state.pageNum;
+            '/news/keyword/' + this.state.source + '/startdate/' + this.state.startdate + '/enddate/' + this.state.enddate;
     
         const request = new Request(
           encodeURI(news_url),
           {
             method:'GET',
-            // headers: {
-            //   'Authorization': 'bearer ' + Auth.getToken(),
-            // }
           });
     
         fetch(request)
@@ -93,11 +105,62 @@ class NewsPanel extends React.Component {
           
       }
 
+    loadAllNews(){
+        const news_url = 'http://' + window.location.hostname + ':3000' +
+        '/news/keyword/' + this.state.source + '/startdate/' + this.state.startdate + '/enddate/' + this.state.enddate;
+
+        const request = new Request(
+            encodeURI(news_url),
+            {
+                method:'GET',
+        });
+
+        fetch(request)
+        .then(res => res.json())
+        .then(news => {
+            if (!news || news.length == 0) {
+            this.setState({loadedAll:true});
+            }
+
+            this.setState({
+                news: news,
+                slicedNews: news.slice((this.state.pageNum-1)*NEWS_LIST_BATCH_SIZE, this.state.pageNum*NEWS_LIST_BATCH_SIZE)
+            }, function(){
+                let pos = 0;
+                let neu = 0;
+                let neg = 0;
+                for (let i=0; i< this.state.news.length; i++){
+                    if (this.state.news[i].rate > DOWN_THRESHOLD && this.state.news[i].rate < UP_THRESHOLD){
+                        neu += 1
+                    }else if (this.state.news[i].rate>= UP_THRESHOLD){
+                        pos += 1
+                    }else{
+                        neg += 1
+                    }
+                }
+                this.props.trackPosNews(pos);
+                this.props.trackNeuNews(neu);
+                this.props.trackNegNews(neg);
+
+            });
+            
+            
+
+            if (this.state.news == null){
+                console.log ('num of news: 0' )
+            }
+            else{
+                console.log('num of news: ' + this.state.news.length)
+                console.log(this.state.slicedNews)
+            }
+        });
+        }
+
     renderNews(){
-        const news_list = this.state.news.map(news => {
+        const news_list = this.state.slicedNews.map(slicedNews => {
             return(
-                <a className='list-group-item' key={news.digest} href='#'>
-                    <NewsCard news={news} />
+                <a className='list-group-item' key={slicedNews.digest} href='#'>
+                    <NewsCard news={slicedNews} />
                 </a>
             )
         });
@@ -111,26 +174,22 @@ class NewsPanel extends React.Component {
         );
     }
 
+
+
     handlePageClick = (data) =>{
         console.log('handlepageclick')
         let dataNum = data.selected + 1
         console.log(dataNum)
         // console.log(page.selected)
         console.log('before ' + this.state.pageNum)
-        this.setState({pageNum: dataNum}, function(){
-            console.log('after ' + this.state.pageNum)
-            this.loadMoreNews();
-        })
+
         
+        this.setState({
+            slicedNews: this.state.news.slice((dataNum-1)*NEWS_LIST_BATCH_SIZE, dataNum*NEWS_LIST_BATCH_SIZE)
+        })
+
     }
-    // handlePageClick = (data) => {
-    //     let selected = data.selected;
-    //     let offset = Math.ceil(selected * this.props.perPage);
-    
-    //     this.setState({offset: offset}, () => {
-    //       this.loadCommentsFromServer();
-    //     });
-    //   };
+
     
 
     render() {
@@ -145,7 +204,7 @@ class NewsPanel extends React.Component {
                        nextLabel={"next"}
                        breakLabel={<a href="">...</a>}
                        breakClassName={"break-me"}
-                       pageCount={10}
+                       pageCount={Math.ceil(this.state.news.length/ NEWS_LIST_BATCH_SIZE)}
                        marginPagesDisplayed={2}
                        pageRangeDisplayed={5}
                        onPageChange={this.handlePageClick}
@@ -159,8 +218,8 @@ class NewsPanel extends React.Component {
         } else{
             return(
                 <div>
-                    <p>{this.props.searchTerm} </p>
-                    {/* Loading... */}
+                    {/* <p>{this.props.searchTerm} </p> */}
+                    Loading...
                 </div>
             );
         }
@@ -170,10 +229,18 @@ class NewsPanel extends React.Component {
 
 // export default NewsPanel;
 
-export default connect(mapStateToProps)(NewsPanel);
+export default connect(mapStateToProps, mapDispatchToProps)(NewsPanel);
+
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({trackPosNews, trackNeuNews, trackNegNews}, dispatch);
+}
+
 
 function mapStateToProps(state){
     return{
-        searchTerm: state.searchTerm
+        searchTerm: state.searchTerm,
+        startTerm: state.startTerm,
+        endTerm: state.endTerm
+
     }
 }

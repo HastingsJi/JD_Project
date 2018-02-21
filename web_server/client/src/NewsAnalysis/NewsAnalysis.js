@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import './NewsAnalysis.css';
 import NewsCard from '../NewsCard/NewsCard';
 // import _ from 'lodash';
@@ -6,117 +7,71 @@ import { connect } from 'react-redux';
 // import ReactPaginate from 'react-paginate';
 
 
-class NewsAnalysis extends React.Component {
-    constructor(props){
-        super(props);                        // no props because on props taken as params 
-        this.state = { news:null,  keyword:'Trump', startdate: '2017-01-10T17:40:40.000Z', enddate:'2018-02-16T17:00:00.000Z'};        // news exsit as Newspanel's child and saved as json list
+var echarts = require('echarts/lib/echarts')
+require('echarts/lib/chart/pie')
+require('echarts/lib/component/title')
+
+export default class NewsAnalysis extends React.Component {
+
+    constructor(props) {
+        super(props)
+        this.setPieOption = this.setPieOption.bind(this)
+        this.initPieChart = this.initPieChart.bind(this)
     }
 
-    // componentWillReceiveProps(nextProps){
-    //     console.log('nextProps.startdate');
-    //     // console.log(this.state.source);
-    //     this.setState({startdate: nextProps.startTerm, enddate:nextProps.endtTerm}, function(){
-    //         // console.log(this.state.source);
-    //         // this.loadMoreNews();
-    //         this.loadNews();
-    //     });
-        
-    // }
-
-  
+    initPieChart() {
+        const { data } = this.props
+        let myChart = echarts.init(this.refs.pieChart)
+        let options = this.setPieOption(data)
+        myChart.setOption(options)
+    }
 
     componentDidMount() {
-        console.log('componentDidMount')
-        this.loadNews();
-        console.log(this.state.news)
-
+        this.initPieChart()
     }
 
-    loadNews(){
-        // console.log('num of news')
-        // '/keyword/:keyword/startdate/:startdate/enddate/:enddate'
-
-        const news_url = 'http://' + window.location.hostname + ':3000' +
-        '/news/keyword/' + this.state.keyword + '/startdate/' + this.state.startdate +
-        '/enddate/' + this.state.enddate;
-
-        const request = new Request(
-        encodeURI(news_url),
-        {
-            method:'GET',
-     
-        });
-
-        fetch(request)
-        .then(res => res.json())
-        .then(news => {
-            // if (!news || news.length == 0) {
-            // this.setState({loadedAll:true});
-            // }
-
-            this.setState({
-
-                news: news
-            });
-        });
+    componentDidUpdate() {
+        this.initPieChart()
     }
-
-
-    renderNews(){
-        const news_list = this.state.news.map(news => {
-            return(
-                <a className='list-group-item' key={news.digest} href='#'>
-                    <NewsCard news={news} />
-                </a>
-            )
-        });
-
-        return(
-            <div className='container-fluid'>
-                <div className='list-group'>
-                {news_list}
-                </div>
-            </div>
-        );
-    }
-
-
 
     render() {
-        if (this.state.news){
-            return (
-                <div>
-                   
-                    {this.renderNews()}   
+        return (
+            <div className="pie-react">
+                <div ref="pieChart" style={{width: "100%", height: '500px'}}></div>
+            </div>
+        )
+    }
 
-                 
-                    
-                    <p>{this.state.news}</p>
-                       
-                </div>
-            );
-        } else{
-            return(
-                <div>
-                    <p>'ssss'</p>
-                    <p>{this.props.startTerm}</p>
-                    <p>{this.props.endtTerm}</p>
-                    {/* Loading... */}
-                </div>
-            );
+    setPieOption(data) {
+        return {
+            title:{
+              text:"News Sentiment Analysis",
+              left:"center"
+            },
+            series : [
+                {
+                    name: 'data',
+                    type: 'pie',
+                    data: data,
+                    label: {
+                        normal: {
+                            formatter: "{d}% \n{b}",
+                        }
+                    }
+                }
+            ]
         }
     }
-
 }
 
-// export default NewsPanel;
+// // export default NewsPanel;
 
-export default connect(mapStateToProps)(NewsAnalysis);
+// export default connect(mapStateToProps)(NewsAnalysis);
 
-function mapStateToProps(state){
-    return{
-        searchTerm: state.searchTerm,
-        startTerm: state.startTerm,
-        endtTerm: state.endtTerm,
-    }
-}
+// function mapStateToProps(state){
+//     return{
+//         searchTerm: state.searchTerm,
+//         startTerm: state.startTerm,
+//         endtTerm: state.endtTerm,
+//     }
+// }

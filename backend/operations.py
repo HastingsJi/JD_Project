@@ -7,10 +7,12 @@ import redis
 import re
 
 import dateutil.parser
-
+from vaderSentiment import SentimentIntensityAnalyzer
 from bson.json_util import dumps
 # import utils packages
 sys.path.append(os.path.join(os.path.dirname(__file__), '../common/'))
+
+from nltk import tokenize
 
 import mongodb_client  # pylint: disable=import-error, wrong-import-position
 # import news_recommendation_service_client
@@ -51,12 +53,32 @@ def getInterestingNewsInRange(keyword, startdate, enddate):
         'publishedAt':{'$gte' : startdate, '$lte':enddate  },
         '$or' : [ { "title" : {'$in': [re.compile(keyword, re.IGNORECASE)]} }, { "description" : {'$in': [re.compile(keyword, re.IGNORECASE)]} } ]
     })
-    # print ('\n')
-    # print(list(interesting_news), file=open('out.txt', 'a'))
-    # print (len(list(interesting_news)))
-    # print ('\n')
-    # interesting_news = 'xx'
-    return json.loads(dumps(list(interesting_news)))
+
+    interesting_news = list(interesting_news)
+    # print (interesting_news)
+    filtered_news = []
+    for news in interesting_news:
+        sentence_list = tokenize.sent_tokenize(news['text'])
+        selected_sentence_list = []
+        for sentence in sentence_list:
+            if (re.compile(r'\b({0})\b'.format(keyword), flags=re.IGNORECASE).search(sentence) != None):
+                # print (sentence)
+                selected_sentence_list.append(sentence)
+            # if 'Trump' in sentence:
+                # print (sentence)
+        analyzer = SentimentIntensityAnalyzer()
+        paragraphSentiments=0.0
+        if len(selected_sentence_list) != 0:
+            for sentence in selected_sentence_list:
+                vs = analyzer.polarity_scores(sentence)
+                # print("{:-<69} {}".format(sentence, str(vs["compound"])))
+                paragraphSentiments += vs["compound"]
+            news['rate'] = str(round(paragraphSentiments/len(selected_sentence_list), 4))
+            filtered_news.append(news)
+
+
+
+    return json.loads(dumps(filtered_news))
 
 
 

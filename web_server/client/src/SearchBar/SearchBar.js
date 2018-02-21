@@ -16,7 +16,7 @@ class SearchBar extends Component {
         // alert('Your favorite flavor is: ' + this.state.value);
         event.preventDefault();
         this.props.trackSearchTerm(this.state.term);
-        console.log(this.state.term)
+        // console.log(this.state.term)
       }
 
     render() {
