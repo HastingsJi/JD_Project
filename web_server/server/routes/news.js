@@ -16,7 +16,6 @@ router.get('/source/:source/pageNum/:pageNum', function(req, res, next) {
 router.get('/source/:source', function(req, res, next) {
 	console.log('Fetching news...');
 	source = req.params['source'];
-	// page_num = req.params['pageNum'];
   
 	rpc_client.getNumofNews(source, function(response) {
 	  res.json(response);

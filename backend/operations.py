@@ -27,27 +27,16 @@ NEWS_LIST_BATCH_SIZE = 10
 USER_NEWS_TIME_OUT_IN_SECONDS = 60
 
 
-# LOG_CLICKS_TASK_QUEUE_URL = 'amqp://seobumce:Cgb4L2j0njuZoFL5WpstU8aBgSepge1c@termite.rmq.cloudamqp.com/seobumce'
-# LOG_CLICKS_TASK_QUEUE_NAME = 'tap-news-log-clicks-task-queue'
-
 redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT, db=0)
 
 from cloudAMQP_client import CloudAMQPClient
 
-# def getOneNews():
-#     """Get one news"""
-#     # print("get_one_news is called.")
-#     db = mongodb_client.get_db()
-#     news = db[NEWS_TABLE_NAME].find_one()
-#     return json.loads(dumps(news))
 
 def getInterestingNewsInRange(keyword, startdate, enddate):
     db = mongodb_client.get_db()
 
     startdate = dateutil.parser.parse(startdate)
     enddate = dateutil.parser.parse(enddate)
-    # print (type(startdate))
-
 
     interesting_news = db[NEWS_TABLE_NAME].find({
         'publishedAt':{'$gte' : startdate, '$lte':enddate  },
@@ -55,23 +44,18 @@ def getInterestingNewsInRange(keyword, startdate, enddate):
     })
 
     interesting_news = list(interesting_news)
-    # print (interesting_news)
     filtered_news = []
     for news in interesting_news:
         sentence_list = tokenize.sent_tokenize(news['text'])
         selected_sentence_list = []
         for sentence in sentence_list:
             if (re.compile(r'\b({0})\b'.format(keyword), flags=re.IGNORECASE).search(sentence) != None):
-                # print (sentence)
                 selected_sentence_list.append(sentence)
-            # if 'Trump' in sentence:
-                # print (sentence)
         analyzer = SentimentIntensityAnalyzer()
         paragraphSentiments=0.0
         if len(selected_sentence_list) != 0:
             for sentence in selected_sentence_list:
                 vs = analyzer.polarity_scores(sentence)
-                # print("{:-<69} {}".format(sentence, str(vs["compound"])))
                 paragraphSentiments += vs["compound"]
             news['rate'] = str(round(paragraphSentiments/len(selected_sentence_list), 4))
             filtered_news.append(news)
@@ -117,23 +101,5 @@ def getNewsSummariesForUser(source, page_num):
 
         sliced_news = total_news[begin_index:end_index]
 
-    # # Get preference for the user
-    # preference = news_recommendation_service_client.getPreferenceForUser(source)
-    # topPreference = None
-
-    # if preference is not None and len(preference) > 0:
-    #     topPreference = preference[0]
-
-    # for news in sliced_news:
-    #     # Remove text field to save bandwidth.
-    #     del news['text']
-    #     if news['class'] == topPreference:
-    #         news['reason'] = 'Recommend'
-    #     if news['publishedAt'].date() == datetime.today().date():
-    #         news['time'] = 'today'
     return json.loads(dumps(sliced_news))
 
-# def logNewsClickForUser(user_id, news_id):
-#     # Send log task to machine learning service for prediction
-#     message = {'userId': user_id, 'newsId': news_id, 'timestamp': str(datetime.utcnow())}
-#     cloudAMQP_client.sendMessage(message);

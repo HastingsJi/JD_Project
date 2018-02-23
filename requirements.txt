@@ -3,3 +3,7 @@ jsonrpclib-pelix
 pika
 redis
 vaderSentiment
+sklearn
+numpy
+scipy
+newspaper3k

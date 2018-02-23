@@ -1,7 +1,6 @@
 import React from 'react';
 import './NewsPanel.css';
 import NewsCard from '../NewsCard/NewsCard';
-// import _ from 'lodash';
 import { connect } from 'react-redux';
 import ReactPaginate from 'react-paginate';
 
@@ -26,7 +25,6 @@ class NewsPanel extends React.Component {
         console.log('NP: '+nextProps.searchTerm);
         console.log('NP: '+nextProps.startTerm);
         console.log('NP: '+nextProps.endTerm);
-        // console.log(this.state.source);
         if (nextProps.searchTerm && nextProps.startTerm && nextProps.endTerm != null){
             this.setState({source: nextProps.searchTerm, startdate:nextProps.startTerm,enddate:nextProps.endTerm}, function(){
                 this.loadAllNews();
@@ -39,8 +37,6 @@ class NewsPanel extends React.Component {
 
 
     componentDidMount() {
-
-        // console.log('zzz')
         this.loadNumNews();
 
     }
@@ -60,9 +56,7 @@ class NewsPanel extends React.Component {
         fetch(request)
         .then(res => res.json())
         .then(num => {
-            // if (!news || news.length == 0) {
-            // this.setState({loadedAll:true});
-            // }
+       
 
             this.setState({
        
@@ -73,12 +67,7 @@ class NewsPanel extends React.Component {
     }
 
     loadMoreNews() {
-        // console.log('yyy')
-        // if (this.state.loadedAll == true) {
-        //   return;
-        // }
 
-        // /keyword/:keyword/startdate/:startdate/enddate/:enddate
     
         const news_url = 'http://' + window.location.hostname + ':3000' +
             '/news/keyword/' + this.state.source + '/startdate/' + this.state.startdate + '/enddate/' + this.state.enddate;
@@ -98,7 +87,6 @@ class NewsPanel extends React.Component {
     
             this.setState({
               news: news,
-            //   pageNum: this.state.pageNum + 1,
             });
           });
 
@@ -218,7 +206,6 @@ class NewsPanel extends React.Component {
         } else{
             return(
                 <div>
-                    {/* <p>{this.props.searchTerm} </p> */}
                     Loading...
                 </div>
             );
@@ -227,7 +214,6 @@ class NewsPanel extends React.Component {
 
 }
 
-// export default NewsPanel;
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewsPanel);
 

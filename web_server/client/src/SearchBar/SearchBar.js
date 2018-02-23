@@ -13,10 +13,8 @@ class SearchBar extends Component {
     }
 
     handleSubmit(event) {
-        // alert('Your favorite flavor is: ' + this.state.value);
         event.preventDefault();
         this.props.trackSearchTerm(this.state.term);
-        // console.log(this.state.term)
       }
 
     render() {
@@ -32,7 +30,6 @@ class SearchBar extends Component {
                     onChange={
                         (event) => {
                             this.setState({term:event.target.value});
-                            // this.props.trackSearchTerm(event.target.value);
                         }
                     }
                   />
@@ -41,7 +38,6 @@ class SearchBar extends Component {
                   
                 </div>
              
-                {/* <div class="row card-panel teal lighten-2">In search bar component: {this.state.term}</div> */}
               </form> 
             </div>
           </nav>

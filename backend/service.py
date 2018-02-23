@@ -13,22 +13,16 @@ import mongodb_client  # pylint: disable=import-error, wrong-import-position
 SERVER_HOST = 'localhost'
 SERVER_PORT = 4040
 
-def add(a,b):
-    return a+b
 
 def get_news_summaries_for_user(source, page_num):
     print("get_news_summaries_for_user is called with %s and %s" % (source, page_num))
     return operations.getNewsSummariesForUser(source, page_num)
 
 def get_num_of_news(source):
-    print ('get_num_of_news')
     return operations.getNumofNews(source)
 
 def get_interesting_news_in_range(keyword, startdate, enddate):
-    # print (keyword, startdate, enddate)
-    # print (type(startdate))
     return (operations.getInterestingNewsInRange(keyword, startdate, enddate))
-    # return (operations.getInterestingNewsInRange('trump', '2017-02-01T20:00:00.000Z', '2017-02-10T20:00:00.000Z'))
     
 
 RPC_SERVER = SimpleJSONRPCServer((SERVER_HOST, SERVER_PORT))
@@ -38,8 +32,6 @@ RPC_SERVER.register_function(get_interesting_news_in_range, 'getInterestingNewsI
 RPC_SERVER.register_function(add, 'Add')
 
 
-
 print("Starting RPC server on %s:%d" % (SERVER_HOST, SERVER_PORT))
-# get_interesting_news_in_range('trump', '2017-02-01T20:00:00.000Z', '2017-02-10T20:00:00.000Z')
 RPC_SERVER.serve_forever()
 

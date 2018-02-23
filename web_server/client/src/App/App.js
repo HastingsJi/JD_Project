@@ -14,7 +14,6 @@ import { connect } from 'react-redux';
 class App extends React.Component {
     constructor(){
         super();                        // no props because on props taken as params 
-        // this.state = { source:'bbc-news'};        // news exsit as Newspanel's child and saved as json list
         this.state = {news : true, data : [
             {value: 0, name: "Positive"},
             {value: 0, name: "Neutral"},
@@ -26,11 +25,9 @@ class App extends React.Component {
         console.log('NP: '+nextProps.posNews);
         console.log('NP: '+nextProps.neuNews);
         console.log('NP: '+nextProps.negNews);
-        // console.log(this.state.source);
         if (nextProps.posNews && nextProps.neuNews && nextProps.negNews != null){
             this.setState({
                 
-                // pos: nextProps.posNews, neu:nextProps.neuNews, neg:nextProps.neg
                 data: [
                     {value: nextProps.posNews, name: "Positive"},
                     {value: nextProps.neuNews, name: "Neutral"},
@@ -89,7 +86,6 @@ class App extends React.Component {
     }
 }
 
-// export default App;
 
 export default connect(mapStateToProps)(App);
 

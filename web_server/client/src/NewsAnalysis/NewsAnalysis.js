@@ -2,9 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './NewsAnalysis.css';
 import NewsCard from '../NewsCard/NewsCard';
-// import _ from 'lodash';
 import { connect } from 'react-redux';
-// import ReactPaginate from 'react-paginate';
 
 
 var echarts = require('echarts/lib/echarts')
@@ -64,14 +62,3 @@ export default class NewsAnalysis extends React.Component {
     }
 }
 
-// // export default NewsPanel;
-
-// export default connect(mapStateToProps)(NewsAnalysis);
-
-// function mapStateToProps(state){
-//     return{
-//         searchTerm: state.searchTerm,
-//         startTerm: state.startTerm,
-//         endtTerm: state.endtTerm,
-//     }
-// }

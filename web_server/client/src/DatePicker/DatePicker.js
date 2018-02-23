@@ -15,25 +15,9 @@ class DatePicker extends Component {
         this.state = { startDate: null, endDate:null, focusedInput:null };
     }
 
-    // componentWillUpdate() {
-    //     // console.log('zz')
-    //     if (this.state.startDate !== null & this.state.endDate !== null){
-    //         // console.log(this.state.startDate.toISOString())
-    //         this.props.trackStartDateTerm(this.state.startDate.toISOString());
-    //         this.props.trackEndDateTerm(this.state.endDate.toISOString());
-            
-    //     }
-        
-        
-    // }
     
     datesChange(startDate, endDate){
-        // if (startDate != null){
-        //     console.log(startDate.startDate.toISOString())
-        // }
-        // if (endDate != null){
-        //     console.log(endDate.endDate.toISOString())
-        // }
+
         if (startDate.startDate != null){
             console.log('start: ' + startDate.startDate.toISOString());
             this.props.trackStartDateTerm(startDate.startDate.toISOString());
@@ -43,7 +27,7 @@ class DatePicker extends Component {
             this.props.trackEndDateTerm(startDate.endDate.toISOString());
         }
         
-        // console.log(endDate)
+   
     }
 
 
