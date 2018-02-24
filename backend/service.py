@@ -29,7 +29,6 @@ RPC_SERVER = SimpleJSONRPCServer((SERVER_HOST, SERVER_PORT))
 RPC_SERVER.register_function(get_news_summaries_for_user, 'getNewsSummariesForUser')
 RPC_SERVER.register_function(get_num_of_news, 'getNumofNews')
 RPC_SERVER.register_function(get_interesting_news_in_range, 'getInterestingNewsInRange')
-RPC_SERVER.register_function(add, 'Add')
 
 
 print("Starting RPC server on %s:%d" % (SERVER_HOST, SERVER_PORT))
