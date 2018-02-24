@@ -40,8 +40,12 @@ Start the server by running
 
 By default, the server should be running at `localhost:3000`
 
+## Enjoy searching News and find the mainstream media's attitude towards certain event/celebrity/country and more
+### Usage
+Once you get into the web application, feel free to type the thing you are interested in the search bar and select the date range. 
 
+NewsEngine is able to return the news with news image, title and description. Besides, NewsEngine also generates two labels for each news, one is the news source, another one is the sentiment score, the higher the score is, the more positive the news is. Clicking the news card will open a new window which directs you to the news website where it gets published.
 
-This project aims to collect news data from mainstream news websites. For now, I choose to focus on the news related to the movies, tv shows, and celebrities. It is designed to be automated and distributed. After the data acquisition, the system should be able to further clean and visualize the data.
+There is also a bottom named Toggle, clicking that bottom will present a pie chart summarizing the news's sentiments towards the keyword.  
 
-see more in the project wiki
+##### see more in the project wiki!
