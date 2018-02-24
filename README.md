@@ -1,6 +1,6 @@
 # NewsEngine
 
-> NewsEngine is designed to collect, analysie and present News from various sources.
+> NewsEngine is designed to collect news from various sources, find the related news based on user's input keyword, analyze the sentiment of the news and present both news and analysis results in a react powered frontend web page. More design details and system architecture can be found on the project wiki page. 
 
 ![Alt Text](https://github.com/HastingsJi/NewsEngine/blob/master/Docs/demo.gif)
 
@@ -22,13 +22,17 @@
 `pip3 install -r requirements.txt`
 
 ### Run the service 
-Download correct version mongodb depending on your OS 
+Download and start the correct version mongodb depending on your OS 
 
 then run `./news_pipeline_launcher.sh` to collect news and store them into database
 
 Build the client side by running 
 * `cd ~/NewsEngine/web_server/client`
 * `npm run build`
+
+Start the RPC_api service 
+* `cd ~/NewsEngine/backend`
+*  `python3 service.py`
 
 Start the server by running 
 * `cd ~/NewsEngine/web_server/server`
